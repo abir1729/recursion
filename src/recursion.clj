@@ -29,14 +29,40 @@
 ;(my-last [1 2 3]) ;=> 3
 ;(my-last [2 5])   ;=> 5
 
+(defn max-element-recur [acc a-seq comparator]
+  (let [first-elem (first a-seq)]
+    (cond
+     (nil? first-elem) acc
+     (comparator first-elem acc) (max-element-recur first-elem (rest a-seq) comparator)
+     :else (max-element-recur acc (rest a-seq) comparator))))
+
 (defn max-element [a-seq]
-  :-)
+  (cond
+   (empty? a-seq) nil
+   :else (max-element-recur (first a-seq) a-seq >)))
+
+;(max-element [2 4 1 4]) ;=> 4
+;(max-element [2])       ;=> 2
+;(max-element [])        ;=> nil
 
 (defn seq-max [seq-1 seq-2]
-  [:-])
+  (let [len-1 (count seq-1)
+        len-2 (count seq-2)]
+    (if (> len-1 len-2)
+      seq-1
+      seq-2)))
+
+;(seq-max [1] [1 2])   ;=> [1 2]
+;(seq-max [1 2] [3 4]) ;=> [3 4]
 
 (defn longest-sequence [a-seq]
-  [:-])
+  (cond
+   (empty? a-seq) nil
+   :else (max-element-recur [] a-seq seq-max)))
+
+;(longest-sequence [[1 2] [] [1 2 3]]) ;=> [1 2 3]
+;(longest-sequence [[1 2]])            ;=> [1 2]
+;(longest-sequence [])                 ;=> nil
 
 (defn my-filter [pred? a-seq]
   [:-])
