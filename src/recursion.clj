@@ -116,16 +116,55 @@
 ;(my-drop-while odd? [])         ;=> ()
 
 (defn seq= [a-seq b-seq]
-  :-)
+  (cond
+   (and (empty? a-seq) (empty? b-seq)) true
+   (or (empty? a-seq) (empty? b-seq)) false
+   :else (let [a-first (first a-seq)
+               b-first (first b-seq)]
+           (cond
+            (= a-first b-first) (seq= (rest a-seq) (rest b-seq))
+            :else false))))
+
+;(seq= [1 2 4] '(1 2 4))  ;=> true
+;(seq= [1 2 3] [1 2 3 4]) ;=> false
+;(seq= [1 3 5] [])        ;=> false
 
 (defn my-map [f seq-1 seq-2]
-  [:-])
+  (cond
+   (or (empty? seq-1) (empty? seq-2)) '()
+   :else (let [first-1 (first seq-1)
+               first-2 (first seq-2)]
+           (cons (f first-1 first-2) (my-map f (rest seq-1) (rest seq-2))))))
+
+;(my-map + [1 2 3] [4 4 4])   ;=> (5 6 7)
+;(my-map + [1 2 3 4] [0 0 0]) ;=> (1 2 3)
+;(my-map + [1 2 3] [])        ;=> ()
+
+(defn indexed [a-seq]
+  (let [indices (range 0 (count a-seq))]
+    (map vector indices a-seq)))
+(defn consecutives [a-seq]
+  (map vector a-seq (rest a-seq)))
+
+;(consecutives [1 2 3])
+;(indexed [1 2 3])
 
 (defn power [n k]
-  :-)
+  (if (zero? k)
+    1
+    (* n (power n (dec k)))))
+
+;(power 2 2)  ;=> 4
+;(power 5 3)  ;=> 125
+;(power 7 0)  ;=> 1
+;(power 0 10) ;=> 0
 
 (defn fib [n]
-  :-)
+  (if (< n 2)
+    n
+    (+ (fib (dec n)) (fib (dec (dec n))))))
+
+;(fib 10)
 
 (defn my-repeat [how-many-times what-to-repeat]
   [:-])
