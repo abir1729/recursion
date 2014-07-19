@@ -65,16 +65,55 @@
 ;(longest-sequence [])                 ;=> nil
 
 (defn my-filter [pred? a-seq]
-  [:-])
+  (cond
+   (empty? a-seq) a-seq
+   :else (let [first-elem (first a-seq)]
+           (cond
+            (pred? first-elem) (cons first-elem (my-filter pred? (rest a-seq)))
+            :else (my-filter pred? (rest a-seq))))))
+
+;(my-filter odd? [1 2 3 4]) ;=> (1 3)
+;(my-filter (fn [x] (> x 9000)) [12 49 90 9001]) ;=> (9001)
+;(my-filter even? [1 3 5 7]) ;=> ()
 
 (defn sequence-contains? [elem a-seq]
-  :-)
+  (cond
+   (empty? a-seq) false
+   :else (let [first-elem (first a-seq)]
+           (cond
+            (= first-elem elem) true
+            :else (sequence-contains? elem (rest a-seq))))))
+
+;(sequence-contains? 3 [1 2 3]) ;=> true
+;(sequence-contains? 3 [4 7 9]) ;=> false
+;(sequence-contains? :pony [:horse :pony])  ;=> false
 
 (defn my-take-while [pred? a-seq]
-  [:-])
+  (if (empty? a-seq)
+    '()
+    (let [first-elem (first a-seq)]
+      (if (pred? first-elem)
+        (cons first-elem (my-take-while pred? (rest a-seq)))
+        '()))))
+
+;(assoc [1 2 3] 2 4)
+;(my-take-while odd? [1 2 3 4])  ;=> (1)
+;(my-take-while odd? [1 3 4 5])  ;=> (1 3)
+;(my-take-while even? [1 3 4 5]) ;=> ()
+;(my-take-while odd? [])         ;=> ()
 
 (defn my-drop-while [pred? a-seq]
-  [:-])
+  (if (empty? a-seq)
+    '()
+    (let [first-elem (first a-seq)]
+      (if (pred? first-elem)
+        (my-drop-while pred? (rest a-seq))
+        (seq a-seq)))))
+
+;(my-drop-while odd? [1 2 3 4])  ;=> (2 3 4)
+;(my-drop-while odd? [1 3 4 5])  ;=> (4 5)
+;(my-drop-while even? [1 3 4 5]) ;=> (1 3 4 5)
+;(my-drop-while odd? [])         ;=> ()
 
 (defn seq= [a-seq b-seq]
   :-)
