@@ -230,29 +230,82 @@
 ;(drop 0 '(1 2 3))
 ;(merge '(3) '(1 2))
 
-(defn my-frequencies-helper [freqs a-seq]
-  [:-])
+;(defn my-frequencies-helper [freqs a-seq]
+;  [:-])
 
 (defn my-frequencies [a-seq]
-  [:-])
+  (reduce
+   (fn [freq-map key]
+     (assoc freq-map key (inc (freq-map key 0))))
+   {}
+   a-seq))
+
+;({:a 1 :b 2} :c 0)
+;(my-frequencies []) ;=> {}
+;(my-frequencies [:a "moi" :a "moi" "moi" :a 1]) ;=> {:a 3, "moi" 3, 1 1}
 
 (defn un-frequencies [a-map]
-  [:-])
+  (reduce
+   (fn [a-seq a-key]
+     (let [count-key (a-map a-key)]
+       (concat a-seq (repeat count-key a-key))))
+   '()
+   (keys a-map)))
+
+;(keys {:a 1})
+;(un-frequencies {:a 3 :b 2 "^_^" 1})             ;=> (:a :a :a "^_^" :b :b)
+;(un-frequencies (my-frequencies [:a :b :c :a]))  ;=> (:a :a :b :c)
+;(my-frequencies (un-frequencies {:a 100 :b 10})) ;=> {:a 100 :b 10}
 
 (defn my-take [n coll]
-  [:-])
+  (cond
+   (or (empty? coll) (zero? n)) '()
+   :else (cons (first coll)
+               (my-take (dec n) (rest coll)))))
+
+;(my-take 2 [1 2 3 4]) ;=> (1 2)
+;(my-take 4 [:a :b])   ;=> (:a :b)
 
 (defn my-drop [n coll]
-  [:-])
+  (cond
+   (or (empty? coll) (zero? n)) coll
+   :else (my-drop (dec n) (rest coll))))
+
+;(my-drop 2 [1 2 3 4]) ;=> (3 4)
+;(my-drop 4 [:a :b])   ;=> ()
 
 (defn halve [a-seq]
-  [:-])
+  (let [half-count (int (/ (count a-seq) 2))
+        first-half (take half-count a-seq)
+        second-half (drop half-count a-seq)]
+    [first-half second-half]))
+
+;(halve [1 2 3 4])
+;(halve [1 2 3 4])   ;=> [(1 2) (3 4)]
+;(halve [1 2 3 4 5]) ;=> [(1 2) (3 4 5)]
+;(halve [1])         ;=> [() (1)]
 
 (defn seq-merge [a-seq b-seq]
-  [:-])
+  (cond
+   (and (empty? a-seq) (empty? b-seq)) '()
+   (empty? a-seq) b-seq
+   (empty? b-seq) a-seq
+   :else (let [a-first (first a-seq)
+               b-first (first b-seq)]
+           (cond
+            (< a-first b-first) (cons a-first (seq-merge (rest a-seq) b-seq))
+            :else (cons b-first (seq-merge a-seq (rest b-seq)))))))
+
+;(seq-merge [4] [1 2 6 7])        ;=> (1 2 4 6 7)
+;(seq-merge [1 5 7 9] [2 2 8 10]) ;=> (1 2 2 5 7 8 9 10)
 
 (defn merge-sort [a-seq]
-  [:-])
+  (if (or (singleton? a-seq) (empty? a-seq)) a-seq
+    (let [[first-half second-half] (halve a-seq)]
+      (seq-merge (merge-sort first-half) (merge-sort second-half)))))
+
+;(merge-sort [1 -2 5 3])
+;(merge-sort [])
 
 (defn split-into-monotonics [a-seq]
   [:-])
