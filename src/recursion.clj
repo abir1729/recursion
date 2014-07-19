@@ -167,19 +167,68 @@
 ;(fib 10)
 
 (defn my-repeat [how-many-times what-to-repeat]
-  [:-])
+  (if (<= how-many-times 0)
+    '()
+    (cons what-to-repeat (my-repeat (dec how-many-times) what-to-repeat))))
+
+
+;(my-repeat 2 :a)    ;=> (:a :a)
+;(my-repeat 3 "lol") ;=> ("lol" "lol" "lol")
+;(my-repeat -1 :a)   ;=> ()
+
+(defn my-range-from [low high]
+  (if (>= low high)
+    '()
+    (cons low (my-range-from (inc low) high))))
 
 (defn my-range [up-to]
-  [:-])
+  (if (zero? up-to)
+    '()
+    (cons (dec up-to) (my-range (dec up-to)))))
+
+;(my-range 0)  ;=> ()
+;(my-range 1)  ;=> (0)
+;(my-range 2)  ;=> (1 0)
+;(my-range 3)  ;=> (2 1 0)
 
 (defn tails [a-seq]
-  [:-])
+  (if (empty? a-seq)
+    '(())
+    (cons (seq a-seq) (tails (rest a-seq)))))
+
+;(tails [1 2 3 4]) ;=> ((1 2 3 4) (2 3 4) (3 4) (4) ())
 
 (defn inits [a-seq]
-  [:-])
+  (reverse (map reverse (tails (reverse a-seq)))))
+
+;(inits [1 2 3 4]) ;=> (() (1) (1 2) (1 2 3) (1 2 3 4))
 
 (defn rotations [a-seq]
-  [:-])
+  (let [indices (range 0 (count a-seq))]
+    (map (fn [sequence rotation-index]
+             (concat
+              (drop rotation-index sequence)
+              (take rotation-index sequence)))
+         (repeat (count a-seq) a-seq)
+         indices)))
+
+;;;;;;;;;;;;; TODO:
+;(rotations []) ;=> (())
+;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+;(repeat (count []) [])
+;(rotations [1 2 3])   ;=> ((1 2 3) (2 3 1) (3 1 2))
+;(rotations [:a :b])   ;=> ((:a :b) (:b :a))
+; The order of rotations does not matter.
+;(rotations [:a :b])   ;=> ((:b :a) (:a :b))
+;(rotations [1 5 9 2]) ;=> ((1 5 9 2) (2 1 5 9) (9 2 1 5) (5 9 2 1))
+;(count (rotations [6 5 8 9 2])) ;=> 5
+
+;(take 0 '(1 2 3))
+;(drop 0 '(1 2 3))
+;(merge '(3) '(1 2))
 
 (defn my-frequencies-helper [freqs a-seq]
   [:-])
