@@ -10,7 +10,7 @@
 (defn singleton? [coll]
   (if (and
        (empty? (rest coll))
-       (not (nil? (first coll))))
+       (not (empty? coll)))
     true
     false))
 
@@ -18,6 +18,8 @@
 ;(singleton? #{2})    ;=> true
 ;(singleton? [])      ;=> false
 ;(singleton? [1 2 3]) ;=> false
+;(singleton? [nil])
+;(seq? [])
 
 (defn my-last [coll]
   (cond
@@ -307,8 +309,36 @@
 ;(merge-sort [1 -2 5 3])
 ;(merge-sort [])
 
+(defn determine-monotonicity [first second]
+  (if (>= second first)
+    >=
+    <))
+
+(defn take-while-monotonic-helper [prev a-seq order-func]
+  (if (empty? a-seq)
+    [prev]
+    (let [next-elem (first a-seq)
+          rest-seq (rest a-seq)]
+      (if (order-func next-elem prev)
+        (cons prev (take-while-monotonic-helper next-elem rest-seq order-func))
+        [prev]))))
+
+(defn take-while-monotonic [a-seq]
+  (if (or (empty? a-seq) (singleton? a-seq))
+    a-seq
+    (let [[first-elem next-elem] a-seq
+          order-func (determine-monotonicity first-elem next-elem)]
+      (take-while-monotonic-helper first-elem (rest a-seq) order-func))))
+
+;(take-while-monotonic [-9 0 -1])
+
 (defn split-into-monotonics [a-seq]
-  [:-])
+  (if (or (empty? a-seq) (singleton? a-seq))
+    (seq a-seq)
+    (let [first-monotonic (take-while-monotonic a-seq)]
+      (cons first-monotonic (split-into-monotonics (drop (count first-monotonic) a-seq))))))
+
+;(split-into-monotonics [1 2 -1 4 -7 -8 -9])
 
 (defn permutations [a-set]
   [:-])
