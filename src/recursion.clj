@@ -309,7 +309,7 @@
 ;(merge-sort [1 -2 5 3])
 ;(merge-sort [])
 
-(defn determine-monotonicity [first second]
+(defn monotonicity [first second]
   (if (>= second first)
     >=
     <))
@@ -327,7 +327,7 @@
   (if (or (empty? a-seq) (singleton? a-seq))
     a-seq
     (let [[first-elem next-elem] a-seq
-          order-func (determine-monotonicity first-elem next-elem)]
+          order-func (monotonicity first-elem next-elem)]
       (take-while-monotonic-helper first-elem (rest a-seq) order-func))))
 
 ;(take-while-monotonic [-9 0 -1])
