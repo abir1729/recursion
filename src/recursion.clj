@@ -377,7 +377,21 @@
                    (repeat (count indices) a-vec))))))
 
 ;(permutations #{1 2 3 4 5})
+(cons 1 #{2 3})
+
+(defn cons-all [an-elem a-list-of-list]
+  (map #(cons an-elem %) a-list-of-list))
+
+(cons-all 2 [[3 4] [6 7] #{4 5}])
 
 (defn powerset [a-set]
-  [:-])
+  (if (or (empty? a-set) (singleton? a-set))
+    (set [a-set '()])
+    (let [the-elem (first a-set)
+          rest-set (rest a-set)
+          powersets-of-rest (powerset rest-set)
+          powersets-containing-the-elem (cons-all the-elem powersets-of-rest)]
+      (concat powersets-of-rest powersets-containing-the-elem))))
+
+;(powerset #{2 3})
 
