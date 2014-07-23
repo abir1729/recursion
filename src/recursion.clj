@@ -334,14 +334,49 @@
 
 (defn split-into-monotonics [a-seq]
   (if (or (empty? a-seq) (singleton? a-seq))
-    (seq a-seq)
+    a-seq
     (let [first-monotonic (take-while-monotonic a-seq)]
       (cons first-monotonic (split-into-monotonics (drop (count first-monotonic) a-seq))))))
 
 ;(split-into-monotonics [1 2 -1 4 -7 -8 -9])
+;(map list [1 2] [3 4])
+;(get [1 2 3] 0)
+;(cons 0 (concat [[1 2]] [3 4]))
+;(take 1 [1 2 3])
+;(empty? [1])
+;(get 0 '(1 2))
+;(range 1 (inc (count #{1 2})))
+;(get [1 2 3] 0)
+;(range 1 0)
+;(repeat 2 [1 2])
+;(concat '() '(1 2))
+;(map #(cons 2 %) [[1 2] [3 4]])
+;(concat [1] '(2 3))
+;(map #(cons 3 %) '(((1 2)) ((2 1))))
+;(reduce (fn [a-list a-list-of-list]
+;          (concat a-list a-list-of-list))
+;        []
+;        [[[1 2] [2 3]] [[4 5] [6 7]]])
+;(conj [1 2] 3)
 
 (defn permutations [a-set]
-  [:-])
+  (let [a-vec (vec a-set)
+        indices (range 0 (count a-vec))]
+    (if (or (empty? a-vec) (singleton? a-vec))
+      [a-vec]
+      (reduce (fn [a-list a-list-of-list]
+                (concat a-list a-list-of-list))
+              []
+              (map (fn [index a-vec]
+                     (let [the-elem (get a-vec index)
+                           first-half (take index a-vec)
+                           second-half (drop (inc index) a-vec)
+                           rest-permutations (permutations (concat first-half second-half))]
+                       (map #(cons the-elem %) rest-permutations)))
+                   indices
+                   (repeat (count indices) a-vec))))))
+
+;(permutations #{1 2 3 4 5})
 
 (defn powerset [a-set]
   [:-])
