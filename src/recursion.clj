@@ -376,6 +376,21 @@
                    indices
                    (repeat (count indices) a-vec))))))
 
+(defn my-list? [a-list]
+  (or (vector? a-list) (list? a-list) (seq? a-list)))
+
+(defn my-flatten [a-list]
+  (if (empty? a-list)
+    a-list
+    (let [first-elem (first a-list)]
+      (if (my-list? first-elem)
+        (let [flattened-first-list (my-flatten first-elem)]
+          (concat flattened-first-list (my-flatten (rest a-list))))
+        (cons first-elem (my-flatten (rest a-list)))))))
+
+(my-flatten '(1 2 '(3 4 '(5 6))))
+(my-flatten [1 2 [4 5 [6 7]]])
+
 ;(permutations #{1 2 3 4 5})
 (cons 1 #{2 3})
 
@@ -393,5 +408,4 @@
           powersets-containing-the-elem (cons-all the-elem powersets-of-rest)]
       (concat powersets-of-rest powersets-containing-the-elem))))
 
-;(powerset #{2 3})
-
+(count (powerset #{2 3 4 5}))
