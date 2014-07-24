@@ -364,17 +364,15 @@
         indices (range 0 (count a-vec))]
     (if (or (empty? a-vec) (singleton? a-vec))
       [a-vec]
-      (reduce (fn [a-list a-list-of-list]
-                (concat a-list a-list-of-list))
-              []
-              (map (fn [index a-vec]
-                     (let [the-elem (get a-vec index)
-                           first-half (take index a-vec)
-                           second-half (drop (inc index) a-vec)
-                           rest-permutations (permutations (concat first-half second-half))]
-                       (map #(cons the-elem %) rest-permutations)))
-                   indices
-                   (repeat (count indices) a-vec))))))
+      (apply concat
+             (map (fn [index a-vec]
+                    (let [the-elem (get a-vec index)
+                          first-half (take index a-vec)
+                          second-half (drop (inc index) a-vec)
+                          rest-permutations (permutations (concat first-half second-half))]
+                      (map #(cons the-elem %) rest-permutations)))
+                  indices
+                  (repeat (count indices) a-vec))))))
 
 (defn my-list? [a-list]
   (or (vector? a-list) (list? a-list) (seq? a-list)))
@@ -391,7 +389,7 @@
 (my-flatten '(1 2 '(3 4 '(5 6))))
 (my-flatten [1 2 [4 5 [6 7]]])
 
-;(permutations #{1 2 3 4 5})
+;(permutations #{1 2 3 4})
 (cons 1 #{2 3})
 
 (defn cons-all [an-elem a-list-of-list]
